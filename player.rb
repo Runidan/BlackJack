@@ -28,6 +28,6 @@ class Player
   end
 
   def show_card
-    puts *@cards
+    @cards.each { |card| print "#{card.string} "}
   end
 end
