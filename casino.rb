@@ -14,12 +14,15 @@ class Casino
   def game
     deck = Deck.new
     player_play(deck)
-    @dialer.add_card(deck)
-    statistic(@dialer)
+    dealer_play(deck)
+    puts game_result
+
   end
 
   private
   def player_play(deck)
+    @player.cash -= 10
+    @bank += 10
     @player.add_card(deck)
     @player.add_card(deck)
     statistic(@player)
@@ -28,9 +31,33 @@ class Casino
     statistic(@player)
   end
 
+  def dealer_play(deck)
+    @dialer.cash -= 10
+    @bank += 10
+    @dialer.add_card(deck)
+    statistic(@dialer)
+  end
+
   def statistic(player)
     print "Игрок: #{player.name} Карты: "
     player.show_card
     print " Стоимость: #{player.count_card}\n"
+  end
+
+  def game_result
+    if @player.count_card > 21 || (@dialer.count_card <= 21 && @player.count_card < @dialer.count_card)
+      @dialer.cash += @bank
+      @bank = 0
+      return 'Вы проиграли'
+    elsif @player.count_card > @dialer.count_card
+      @player.cash += @bank
+      @bank = 0
+      return 'Вы выиграли'
+    else
+      @player.cash += @bank / 2
+      @dialer.cash += @bank / 2
+      @bank = 0
+      return 'Ничья'
+    end
   end
 end
