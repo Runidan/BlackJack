@@ -30,4 +30,8 @@ class Player
   def show_card
     @cards.each { |card| print "#{card.string} " }
   end
+
+  def no_card
+    @cards.clear
+  end
 end

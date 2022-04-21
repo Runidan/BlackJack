@@ -21,6 +21,8 @@ class Casino
       dealer_play(deck)
       puts game_result
       i = next_round
+      @player.no_card
+      @dialer.no_card
     end
   end
 
@@ -31,8 +33,8 @@ class Casino
     @player.add_card(deck)
     @player.add_card(deck)
     statistic(@player)
-    puts "Eщё карту?\n1 - Пас\n2 - Ещё"
-    @player.add_card(deck) if gets.chomp.to_i == 2
+    puts "Eщё карту?\n1 - Ещё\n2 - Пас"
+    @player.add_card(deck) if gets.chomp.to_i == 1
     statistic(@player)
   end
 
@@ -67,13 +69,20 @@ class Casino
   end
 
   def next_round
-    if @player.cash < BID
-      puts "На вашем счету недостаточно для новой ставки. Вы проиграли" 
-      return false
-    end 
-    puts "На вашем счету #{@player.cash} $\nХотите играть еще?\n 1 - Да\n2 - Нет"
+    return false unless check_balanc
+    puts "На вашем счету #{@player.cash} $\nХотите играть еще?\n1 - Да\n2 - Нет"
     return true if gets.chomp.to_i == 1
     puts "Всего доброго"
     false
   end
+
+  def check_balanc
+    if @player.cash < BID
+      puts "На вашем счету недостаточно для новой ставки. Вы проиграли" 
+      return false
+    elsif @dialer.cash < BID
+      puts "Поздарвляю, вы выграли!!!\nНа счету диллера недостаточно для новой ставки" 
+      return false
+    end
+  end 
 end
