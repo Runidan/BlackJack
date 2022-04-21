@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Player
-  attr_accessor :cash, :cards
+  attr_reader :cards
+  attr_accessor :cash
 
   def initialize(name)
     @cards = []
@@ -24,5 +25,9 @@ class Player
       carts_sum.call
     end
     sum
+  end
+
+  def show_card
+    puts *@cards
   end
 end
