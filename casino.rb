@@ -3,6 +3,8 @@ require_relative 'player'
 require_relative 'dealer'
 
 class Casino
+  BID = 10
+
   def initialize
     print 'Введите ваше имя:'
     name = gets.chomp
@@ -12,11 +14,14 @@ class Casino
   end
 
   def game
-    deck = Deck.new
-    player_play(deck)
-    dealer_play(deck)
-    puts game_result
-
+    i = true
+    while i
+      deck = Deck.new
+      player_play(deck)
+      dealer_play(deck)
+      puts game_result
+      i = next_round
+    end
   end
 
   private
@@ -48,16 +53,27 @@ class Casino
     if @player.count_card > 21 || (@dialer.count_card <= 21 && @player.count_card < @dialer.count_card)
       @dialer.cash += @bank
       @bank = 0
-      return 'Вы проиграли'
+      return 'Вы проиграли этот раунд'
     elsif @player.count_card > @dialer.count_card
       @player.cash += @bank
       @bank = 0
-      return 'Вы выиграли'
+      return 'Вы выиграли этот раунд'
     else
       @player.cash += @bank / 2
       @dialer.cash += @bank / 2
       @bank = 0
       return 'Ничья'
     end
+  end
+
+  def next_round
+    if @player.cash < BID
+      puts "На вашем счету недостаточно для новой ставки. Вы проиграли" 
+      return false
+    end 
+    puts "На вашем счету #{@player.cash} $\nХотите играть еще?\n 1 - Да\n2 - Нет"
+    return true if gets.chomp.to_i == 1
+    puts "Всего доброго"
+    false
   end
 end
