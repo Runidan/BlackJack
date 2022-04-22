@@ -19,7 +19,7 @@ class Casino
       deck = Deck.new
       player_play(deck)
       dealer_play(deck)
-      puts game_result
+      puts game_result(@player.count_card, @dialer.count_card)
       i = next_round
       @player.no_card
       @dialer.no_card
@@ -51,12 +51,12 @@ class Casino
     print " Стоимость: #{player.count_card}\n"
   end
 
-  def game_result
-    if @player.count_card > 21 || (@dialer.count_card <= 21 && @player.count_card < @dialer.count_card)
+  def game_result(p_count, d_count)
+    if p_count > 21 || ( d_count <= 21 && p_count < d_count )
       @dialer.cash += @bank
       @bank = 0
       return 'Вы проиграли этот раунд'
-    elsif @player.count_card > @dialer.count_card
+    elsif p_count > d_count || d_count > 21
       @player.cash += @bank
       @bank = 0
       return 'Вы выиграли этот раунд'
@@ -68,14 +68,6 @@ class Casino
     end
   end
 
-  def next_round
-    return false unless check_balanc
-    puts "На вашем счету #{@player.cash} $\nХотите играть еще?\n1 - Да\n2 - Нет"
-    return true if gets.chomp.to_i == 1
-    puts "Всего доброго"
-    false
-  end
-
   def check_balanc
     if @player.cash < BID
       puts "На вашем счету недостаточно для новой ставки. Вы проиграли" 
@@ -84,5 +76,15 @@ class Casino
       puts "Поздарвляю, вы выграли!!!\nНа счету диллера недостаточно для новой ставки" 
       return false
     end
+    true
   end 
+
+  def next_round
+    return false if !check_balanc
+
+    puts "На вашем счету #{@player.cash} $\nХотите играть еще?\n1 - Да\n2 - Нет"
+    return true if gets.chomp.to_i == 1
+    puts "Всего доброго"
+    false
+  end
 end
