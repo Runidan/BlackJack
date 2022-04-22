@@ -16,7 +16,8 @@ class Player
 
   def count_card
     sum = 0
-    card_price = { "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, J: 10, Q: 10, K: 10, A: 11 } 
+    card_price = { "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, J: 10, Q: 10, K: 10,
+                   A: 11 }
     carts_sum = -> { @cards.each { |card| sum += card_price[card.rank] } }
     carts_sum.call
     if sum > 21

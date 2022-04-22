@@ -3,8 +3,6 @@
 require_relative 'player'
 
 class Dealer < Player
-
-
   def add_card(deck)
     @cards << deck.take_card
     @cards << deck.take_card
