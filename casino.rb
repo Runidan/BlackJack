@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'player'
 require_relative 'dealer'
 
@@ -27,6 +28,7 @@ class Casino
   end
 
   private
+
   def player_play(deck)
     @player.cash -= 10
     @bank += 10
@@ -52,39 +54,48 @@ class Casino
   end
 
   def game_result(p_count, d_count)
-    if p_count > 21 || ( d_count <= 21 && p_count < d_count )
-      @dialer.cash += @bank
-      @bank = 0
-      return 'Вы проиграли этот раунд'
-    elsif p_count > d_count || d_count > 21
-      @player.cash += @bank
-      @bank = 0
-      return 'Вы выиграли этот раунд'
-    else
-      @player.cash += @bank / 2
-      @dialer.cash += @bank / 2
-      @bank = 0
-      return 'Ничья'
-    end
+    return loss if p_count > 21 || (d_count <= 21 && p_count < d_count)
+    return win if p_count > d_count || d_count > 21
+    draw
+  end
+
+  def loss
+    @dialer.cash += @bank
+    @bank = 0
+    'Вы проиграли этот раунд'
+  end
+
+  def win
+    @player.cash += @bank
+    @bank = 0
+    'Вы выиграли этот раунд'
+  end
+
+  def draw
+    @player.cash += @bank / 2
+    @dialer.cash += @bank / 2
+    @bank = 0
+    'Ничья'
   end
 
   def check_balanc
     if @player.cash < BID
-      puts "На вашем счету недостаточно для новой ставки. Вы проиграли" 
+      puts 'На вашем счету недостаточно для новой ставки. Вы проиграли'
       return false
     elsif @dialer.cash < BID
-      puts "Поздарвляю, вы выграли!!!\nНа счету диллера недостаточно для новой ставки" 
+      puts "Поздарвляю, вы выграли!!!\nНа счету диллера недостаточно для новой ставки"
       return false
     end
     true
-  end 
+  end
 
   def next_round
-    return false if !check_balanc
+    return false unless check_balanc
 
     puts "На вашем счету #{@player.cash} $\nХотите играть еще?\n1 - Да\n2 - Нет"
     return true if gets.chomp.to_i == 1
-    puts "Всего доброго"
+
+    puts 'Всего доброго'
     false
   end
 end
